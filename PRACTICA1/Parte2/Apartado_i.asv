@@ -3,41 +3,62 @@ clear all;clc
 %Tiempo de muestreo
 Ts=100e-3
 
-%Apartado e
+%Apartado i
 % Generar N posiciones aleatorias, simular y guardar en variables
 N=5
 E_d_vec=[];
 E_theta_vec=[];
-V_vec=[];
-W_vec=[];
+refx_vec=[];
+refy_vec=[];
 for i=1:N
     refx=10*rand-5;
     refy=10*rand-5;
     sim('PositionControl.slx')
-    E_d_vec=[E_d_vec;E_d.signals.values];
-    E_theta_vec=[E_theta_vec;E_theta.signals.values];
-    V_vec=[V_vec; V.signals.values];
-    W_vec=[W_vec; W.signals.values];
+    E_d_vec=[E_d.signals.values];
+    E_theta_vec=[E_theta.signals.values];
+    refx_vec=[refx];
+    refy_vec=[refy];
     i
 end
+f = figure;
+plot(1:tamano, refx_vec, 'o-r');
+hold on
+plot(1:tamano, refy_vec, 'o-b');
+plot(1:tamano, E_d_vec, 'm-o');
+plot(1:tamano, E_theta_vec, 'o-k');
+hold off
+title('Gráfica')
+xlabel('Filas de la matriz')
+ylabel('Valores de la matriz')
+%{
 inputs=[E_d_vec'; E_theta_vec'];
 outputs=[V_vec'; W_vec'];
+for i=1:N
+    refx=10*rand-5;
+    refy=10*rand-5;
+    sim('PositionControl.slx')
+    i
+end
+x=salida_x.signals.values;
+y=salida_y.signals.values;
+
+figure;
+plot(x,y);
+grid on;
+hold on;
 
 
 J=5
-E_d_vec2=[];
-E_theta_vec=[];
-V_vec=[];
-W_vec=[];
 for i=1:J
     refx=10*rand-5;
     refy=10*rand-5;
     sim('PositionControlNet.slx')
-    E_d_vec2=[E_d_vec2;E_d.signals.values];
-    E_theta_vec=[E_theta_vec;E_theta.signals.values];
-    V_vec=[V_vec; V.signals.values];
-    W_vec=[W_vec; W.signals.values];
     i
 end
-inputs=[E_d_vec2'; E_theta_vec'];
-outputs=[V_vec'; W_vec'];
+x2=salida_x.signals.values;
+y2=salida_y.signals.values;
+figure;
+plot(x2,y2);
+grid on;
+hold on;
+%}
