@@ -1,0 +1,139 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% APROXIMACIÓN DE FUNCIONES
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% DEFINICIÓN DE LOS VECTORES DE ENTRADA-SALIDA
+% ============================================
+
+t = -3:.1:3; % eje de tiempo
+F = sinc(t)+.001*randn(size(t)); % función que se desea aproximar
+
+plot(t,F,'+');
+title('Vectores de entrenamiento');
+xlabel('Vector de entrada P');
+ylabel('Vector Target T');
+
+% DISEÑO DE LA RED
+% ==================
+
+hiddenLayerSize = 4;
+net = fitnet(hiddenLayerSize,'trainrp');%Retropropagación resiliente
+
+net.divideParam.trainRatio = 70/100;
+net.divideParam.valRatio = 15/100;
+net.divideParam.testRatio = 15/100;
+
+net = train(net,t,F);
+
+Y=net(t);
+
+plot(t,F,'+'); hold on;
+plot(t,Y,'-r'); hold off;
+title('Vectores de entrenamiento');
+xlabel('Vector de entrada P');
+ylabel('Vector Target T');
+
+---------------------------------------------------------------------------------
+net = fitnet(hiddenLayerSize,'trainlm');%Levenberg-Marquardt
+
+net.divideParam.trainRatio = 70/100;
+net.divideParam.valRatio = 15/100;
+net.divideParam.testRatio = 15/100;
+
+net = train(net,t,F);
+
+Y=net(t);
+
+plot(t,F,'+'); hold on;
+plot(t,Y,'-r'); hold off;
+title('Vectores de entrenamiento');
+xlabel('Vector de entrada P');
+ylabel('Vector Target T');
+
+--------------------------------------------------------------------------
+net = fitnet(hiddenLayerSize,'trainbr');%Regularización bayesiana
+
+net.divideParam.trainRatio = 70/100;
+net.divideParam.valRatio = 15/100;
+net.divideParam.testRatio = 15/100;
+
+net = train(net,t,F);
+
+Y=net(t);
+
+plot(t,F,'+'); hold on;
+plot(t,Y,'-r'); hold off;
+title('Vectores de entrenamiento');
+xlabel('Vector de entrada P');
+ylabel('Vector Target T');
+
+--------------------------------------------------------------------------
+net = fitnet(hiddenLayerSize,'trainscg');%Gradiente conjugado escalado
+
+net.divideParam.trainRatio = 70/100;
+net.divideParam.valRatio = 15/100;
+net.divideParam.testRatio = 15/100;
+
+net = train(net,t,F);
+
+Y=net(t);
+
+plot(t,F,'+'); hold on;
+plot(t,Y,'-r'); hold off;
+title('Vectores de entrenamiento');
+xlabel('Vector de entrada P');
+ylabel('Vector Target T');
+
+--------------------------------------------------------------------------
+net = fitnet(hiddenLayerSize,'trainbfg');%Gradiente descendente de tasa de aprendizaje variable
+
+net.divideParam.trainRatio = 70/100;
+net.divideParam.valRatio = 15/100;
+net.divideParam.testRatio = 15/100;
+
+net = train(net,t,F);
+
+Y=net(t);
+
+plot(t,F,'+'); hold on;
+plot(t,Y,'-r'); hold off;
+title('Vectores de entrenamiento');
+xlabel('Vector de entrada P');
+ylabel('Vector Target T');
+
+%{
+'trainlm'	
+Levenberg-Marquardt
+
+'trainbr'	
+Regularización bayesiana
+
+'trainbfg'	
+BFGS quasi-Newton
+
+'trainrp'	
+Retropropagación resiliente
+
+'trainscg'	
+Gradiente conjugado escalado
+
+'traincgb'	
+Gradiente conjugado con reinicios de Powell/Beale
+
+'traincgf'	
+Gradiente conjugado de Fletcher-Powell
+
+'traincgp'	
+Gradiente conjugado de Polak-Ribiére
+
+'trainoss'	
+Secante de un paso
+
+'traingdx'	
+Gradiente descendente de tasa de aprendizaje variable
+
+'traingdm'	
+Gradiente descendente con momento
+
+'traingd'
+%}
