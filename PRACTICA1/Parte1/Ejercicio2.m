@@ -25,7 +25,7 @@ ylabel('Vector Target T');
 
 % DISEÑO DE LA RED
 % ==================
-%{
+% Valores a cambiar: hiddenLayerSize y tipo de entrenamiento
 hiddenLayerSize = 4;
 net = fitnet(hiddenLayerSize,'trainrp');
 
@@ -43,75 +43,3 @@ title('Vectores de entrenamiento');
 xlabel('Vector de entrada P');
 ylabel('Vector Target T');
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%Levenberg-Marquardt%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-hiddenLayerSize = 6;%con menos de 6 no se ajusta bien
-net = fitnet(hiddenLayerSize,'trainlm');%Levenberg-Marquardt
-
-net.divideParam.trainRatio = 70/100;
-net.divideParam.valRatio = 15/100;
-net.divideParam.testRatio = 15/100;
-
-net = train(net,t,F);
-
-Y=net(t);
-
-plot(t,F,'+'); hold on;
-plot(t,Y,'-r'); hold off;
-title('Vectores de entrenamiento');
-xlabel('Vector de entrada P');
-ylabel('Vector Target T');
-
-
-%%%%%%%%%%%%%%%%%%%%%%%Regularización bayesiana%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-hiddenLayerSize = 5;%Con menos de 5 no se ajusta
-net = fitnet(hiddenLayerSize,'trainbr');%Regularización bayesiana
-
-net.divideParam.trainRatio = 70/100;
-net.divideParam.valRatio = 15/100;
-net.divideParam.testRatio = 15/100;
-
-net = train(net,t,F);
-
-Y=net(t);
-
-plot(t,F,'+'); hold on;
-plot(t,Y,'-r'); hold off;
-title('Vectores de entrenamiento');
-xlabel('Vector de entrada P');
-ylabel('Vector Target T');
-
-%%%%%%%%%%%%%%%%%%%Gradiente conjugado escalado%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-hiddenLayerSize = 20;%Con menos de 20 no se ajusta
-net = fitnet(hiddenLayerSize,'trainscg');%Gradiente conjugado escalado
-
-net.divideParam.trainRatio = 70/100;
-net.divideParam.valRatio = 15/100;
-net.divideParam.testRatio = 15/100;
-
-net = train(net,t,F);
-
-Y=net(t);
-
-plot(t,F,'+'); hold on;
-plot(t,Y,'-r'); hold off;
-title('Vectores de entrenamiento');
-xlabel('Vector de entrada P');
-ylabel('Vector Target T');
-%}
-%%%%%%%%%Gradiente descendente de tasa de aprendizaje variable%%%%%%%%%%%%%
-hiddenLayerSize =20;%Con menos de 20 no se ajusta
-net = fitnet(hiddenLayerSize,'trainbfg');%Gradiente descendente de tasa de aprendizaje variable
-
-net.divideParam.trainRatio = 70/100;
-net.divideParam.valRatio = 15/100;
-net.divideParam.testRatio = 15/100;
-
-net = train(net,t,F);
-
-Y=net(t);
-
-plot(t,F,'+'); hold on;
-plot(t,Y,'-r'); hold off;
-title('Vectores de entrenamiento');
-xlabel('Vector de entrada P');
-ylabel('Vector Target T');

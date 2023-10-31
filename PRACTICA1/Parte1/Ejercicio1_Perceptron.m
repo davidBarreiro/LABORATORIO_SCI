@@ -56,6 +56,6 @@ net = train(net,P,T);
 
 %Visualización de la línea de decisión del perceptrón
 plotpv(P,T);
-
+plotpc(net.iw{1,1},net.b{1});
 %El segundo caso no es linealmente inependiente
 %}
