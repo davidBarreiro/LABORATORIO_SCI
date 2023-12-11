@@ -20,10 +20,12 @@ for i=1:N
     refy_vec=[refy];
     i
 end
+x2=salida_x.signals.values;
+y2=salida_y.signals.values;
 f = figure;
-plot(refx_vec, 'o-r');
+plot(x2, 'o-r');
 hold on
-plot(refy_vec, 'o-b');
+plot(y2, 'o-b');
 plot(E_d_vec, 'm-o');
 plot(E_theta_vec, 'o-k');
 hold off

@@ -1,0 +1,39 @@
+[System]
+Name='ControlBorrosoC_3'
+Type='mamdani'
+Version=2.0
+NumInputs=2
+NumOutputs=1
+NumRules=4
+AndMethod='min'
+OrMethod='max'
+ImpMethod='min'
+AggMethod='max'
+DefuzzMethod='centroid'
+
+[Input1]
+Name='E_d'
+Range=[0 15]
+NumMFs=2
+MF1='EdP':'trimf',[0 0 7.5]
+MF2='EdG':'trimf',[7.5 15 15]
+
+[Input2]
+Name='E_theta'
+Range=[-3.14159265358979 3.14159265358979]
+NumMFs=2
+MF1='EoN':'trimf',[-3.142 -3.14159265358979 0]
+MF2='EoP':'trimf',[0 3.14159265358979 3.14159265358979]
+
+[Output1]
+Name='W'
+Range=[-1 1]
+NumMFs=2
+MF1='wN':'trapmf',[-1 -1 -0.5 0.5]
+MF2='wP':'trapmf',[-0.5 0.5 1 1]
+
+[Rules]
+0 1, 1 (1) : 1
+0 1, 1 (1) : 1
+0 2, 2 (1) : 1
+0 2, 2 (1) : 1
