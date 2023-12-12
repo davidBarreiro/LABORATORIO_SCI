@@ -1,0 +1,55 @@
+[System]
+Name='ControlBorrosoOk'
+Type='mamdani'
+Version=2.0
+NumInputs=2
+NumOutputs=2
+NumRules=9
+AndMethod='min'
+OrMethod='max'
+ImpMethod='min'
+AggMethod='max'
+DefuzzMethod='centroid'
+
+[Input1]
+Name='E_d'
+Range=[0 15]
+NumMFs=3
+MF1='EdP':'trimf',[0 0 7.5]
+MF2='EdZ':'trimf',[1.25 7.5 13.75]
+MF3='EdG':'trimf',[7.5 15 15]
+
+[Input2]
+Name='E_theta'
+Range=[-3.14159265358979 3.14159265358979]
+NumMFs=3
+MF1='0_Neg':'trimf',[-3.142 -1.571 0]
+MF2='0_Pos':'trimf',[0 1.571 3.142]
+MF3='0_Z':'trimf',[-0.7855 0 0.7855]
+
+[Output1]
+Name='V'
+Range=[0 2]
+NumMFs=3
+MF1='vLento':'trimf',[0 0 1]
+MF2='vZ':'trimf',[0.5 1 1.5]
+MF3='vRapido':'trimf',[1 2 2]
+
+[Output2]
+Name='W'
+Range=[-1 1]
+NumMFs=3
+MF1='wNeg':'trimf',[-1 -1 0]
+MF2='wPos':'trimf',[0 1 1]
+MF3='wZ':'trimf',[-1 0 1]
+
+[Rules]
+1 1, 3 2 (1) : 1
+1 2, 3 1 (1) : 1
+1 3, 3 3 (1) : 1
+3 1, 1 2 (1) : 1
+3 2, 1 1 (1) : 1
+3 3, 3 3 (1) : 1
+2 1, 2 2 (1) : 1
+2 2, 2 1 (1) : 1
+2 3, 3 3 (1) : 1

@@ -2,8 +2,8 @@
 %Tiempo de muestreo
 Ts=100e-3
 % Referencia x-y de posicion
-refx=-2;
-refy=0;
+refx=2;
+refy=2;
 %refx=2
 %refy=2
 % Ejecutar Simulacion
