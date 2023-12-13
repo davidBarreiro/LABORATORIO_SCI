@@ -2,12 +2,10 @@
 %Tiempo de muestreo
 Ts=100e-3
 % Referencia x-y de posicion
-refx=3;
-refy=3;
-obsx=15;
-obsy=15;
-%obsx=1.1421;
-%obsy=0.6158;
+refx=4;
+refy=4;
+obsx=1;
+obsy=0.5;
 % Ejecutar Simulacion
 sim('EvitarObstaculo.slx')
 % Mostrar
