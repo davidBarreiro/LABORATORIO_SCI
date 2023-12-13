@@ -1,0 +1,66 @@
+[System]
+Name='ControlBorroso2'
+Type='mamdani'
+Version=2.0
+NumInputs=4
+NumOutputs=2
+NumRules=10
+AndMethod='min'
+OrMethod='max'
+ImpMethod='min'
+AggMethod='max'
+DefuzzMethod='centroid'
+
+[Input1]
+Name='E_d'
+Range=[0 15]
+NumMFs=2
+MF1='EdP':'trapmf',[0 0 5 10]
+MF2='EdG':'trapmf',[5 10 15 15]
+
+[Input2]
+Name='E_theta'
+Range=[-3.14159265358979 3.14159265358979]
+NumMFs=2
+MF1='0_NEG':'trapmf',[-3.142 -3.142 -0.523598775598299 0.523598775598299]
+MF2='0_POS':'trapmf',[-0.523598775598299 0.523598775598299 3.142 3.142]
+
+[Input3]
+Name='E_d_obs'
+Range=[0 15]
+NumMFs=2
+MF1='EpObs':'trapmf',[0 0 0.5 1]
+MF2='EgObs':'trapmf',[0.5 1 15 15]
+
+[Input4]
+Name='E_theta_obs'
+Range=[-3.142 3.142]
+NumMFs=2
+MF1='E0nObs':'trapmf',[-3.142 -3.142 -0.785398163397448 0.785398163397448]
+MF2='E0pObs':'trapmf',[-0.785398163397448 0.785398163397448 3.142 3.142]
+
+[Output1]
+Name='V'
+Range=[0 2]
+NumMFs=2
+MF1='LENTO':'trapmf',[0 0 0.5 1.5]
+MF2='RAPIDO':'trapmf',[0.5 1.5 2 2]
+
+[Output2]
+Name='W'
+Range=[-1 1]
+NumMFs=2
+MF1='W_NEG':'trapmf',[-1 -1 -0.4 0.4]
+MF2='W_POS':'trapmf',[-0.4 0.4 1 1]
+
+[Rules]
+1 1 0 0, 1 1 (1) : 1
+2 1 0 0, 2 1 (1) : 1
+1 2 0 0, 1 2 (1) : 1
+2 2 0 0, 2 2 (1) : 1
+0 1 1 0, 1 1 (1) : 1
+0 1 2 0, 2 1 (1) : 1
+0 2 1 0, 1 2 (1) : 1
+0 2 2 0, 2 2 (1) : 1
+0 0 1 1, 1 2 (1) : 1
+0 0 1 2, 1 1 (1) : 1

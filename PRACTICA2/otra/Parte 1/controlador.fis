@@ -1,0 +1,59 @@
+[System]
+Name='controlador'
+Type='mamdani'
+Version=2.0
+NumInputs=2
+NumOutputs=2
+NumRules=10
+AndMethod='min'
+OrMethod='max'
+ImpMethod='min'
+AggMethod='max'
+DefuzzMethod='centroid'
+
+[Input1]
+Name='E_d'
+Range=[0 15]
+NumMFs=4
+MF1='PEQUEÑA':'trimf',[0.3 0.3 3.75]
+MF2='MEDIA':'trimf',[3 7.5 10.5]
+MF3='GRANDE':'trimf',[9 15 15]
+MF4='CERO':'trimf',[0 0 0.375]
+
+[Input2]
+Name='E_theta'
+Range=[-3.14159265358979 3.14159265358979]
+NumMFs=3
+MF1='IZQUIERDA':'trimf',[0.01 3.142 3.142]
+MF2='CENTRO':'trimf',[-0 0 0]
+MF3='DERECHA':'trimf',[-3.142 -3.142 -0.01]
+
+[Output1]
+Name='V'
+Range=[0 2]
+NumMFs=4
+MF1='LENTO':'trimf',[0.15 0.15 0.314814814814815]
+MF2='MEDIO':'trimf',[0.267195767195767 1 1.5]
+MF3='RAPIDO':'trimf',[1.25 2 2]
+MF4='PARADA':'zmf',[0.1 0.2]
+
+[Output2]
+Name='W'
+Range=[-1 1]
+NumMFs=4
+MF1='NEGATVO':'trimf',[-1 -1 -0.1]
+MF2='CERO':'trimf',[-0.1 0 0.1]
+MF3='POSITIVA':'trimf',[0.1 1 1]
+MF4='PARADA':'trimf',[0 0 0]
+
+[Rules]
+1 1, 1 3 (1) : 1
+1 2, 1 2 (1) : 1
+1 3, 1 1 (1) : 1
+2 3, 2 1 (1) : 1
+2 2, 2 2 (1) : 1
+2 1, 1 3 (1) : 1
+3 1, 3 3 (1) : 1
+3 2, 3 2 (1) : 1
+3 3, 3 1 (1) : 1
+4 0, 4 4 (1) : 1
