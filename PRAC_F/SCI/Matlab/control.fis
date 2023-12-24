@@ -1,0 +1,88 @@
+[System]
+Name='control'
+Type='mamdani'
+Version=2.0
+NumInputs=6
+NumOutputs=2
+NumRules=12
+AndMethod='min'
+OrMethod='max'
+ImpMethod='min'
+AggMethod='max'
+DefuzzMethod='centroid'
+
+[Input1]
+Name='s05'
+Range=[0 5]
+NumMFs=2
+MF1='DistPequeña':'trapmf',[0 0 4.5 5]
+MF2='DistGrande':'trimf',[4.5 5 5]
+
+[Input2]
+Name='s06'
+Range=[0 5]
+NumMFs=2
+MF1='DistPequeña':'trapmf',[0 0 4.5 5]
+MF2='DistGrande':'trimf',[4.5 5 5]
+
+[Input3]
+Name='s07'
+Range=[0 5]
+NumMFs=2
+MF1='DistPequeña':'trapmf',[0 0 4.5 5]
+MF2='DistGrande':'trimf',[4.5 5 5]
+
+[Input4]
+Name='s08'
+Range=[0 5]
+NumMFs=3
+MF1='DistPequeña':'trapmf',[0.5 1 4.5 5]
+MF2='DistGrande':'trimf',[4.5 5 5]
+MF3='Parada':'trapmf',[0 0 0.5 0.75]
+
+[Input5]
+Name='s10'
+Range=[0 5]
+NumMFs=2
+MF1='DistGrande':'trimf',[4.5 5 5]
+MF2='DistPequeña':'trapmf',[0 0 4.5 5]
+
+[Input6]
+Name='s11'
+Range=[0 5]
+NumMFs=2
+MF1='DistPequeña':'trapmf',[0 0 4.5 5]
+MF2='DistGrande':'trimf',[4.5 5 5]
+
+[Output1]
+Name='steering_wheel_angle'
+Range=[-90 90]
+NumMFs=4
+MF1='GiroIzq':'trimf',[-90 -90 0]
+MF2='GiroCero':'trimf',[-5 0 5]
+MF3='GiroDer90':'trimf',[80 90 90]
+MF4='GiroDer80':'trimf',[0 80 90]
+
+[Output2]
+Name='linear_vel_ackerman_kmh'
+Range=[-30 30]
+NumMFs=5
+MF1='ReverseP':'trimf',[-5 -2.5 0]
+MF2='Cero':'trimf',[-2.5 0 2.5]
+MF3='DriveP':'trimf',[0.158730158730158 2.65873015873016 5.15873015873016]
+MF4='ReverseG':'trimf',[-30 -30 -2.5]
+MF5='DriveG':'trimf',[2.5 30 30]
+
+[Rules]
+1 1 1 2 2 1, 2 1 (1) : 1
+1 1 1 2 1 1, 3 1 (1) : 1
+1 1 2 1 1 1, 3 1 (1) : 1
+1 2 1 1 2 1, 3 1 (1) : 1
+1 1 1 1 2 1, 2 1 (1) : 1
+1 1 1 2 2 2, 3 1 (1) : 1
+1 1 1 1 2 2, 3 1 (1) : 1
+1 1 2 1 2 1, 3 1 (1) : 1
+2 1 1 1 2 1, 3 1 (1) : 1
+1 1 1 2 2 1, 2 1 (1) : 1
+2 1 1 2 2 1, 4 1 (1) : 1
+0 0 0 3 0 0, 2 2 (1) : 1
