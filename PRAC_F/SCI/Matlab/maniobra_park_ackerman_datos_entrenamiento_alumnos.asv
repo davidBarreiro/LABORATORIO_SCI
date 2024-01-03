@@ -1,0 +1,116 @@
+%% conectar
+%***********************
+
+rosshutdown
+clear all
+close all
+
+rosinit('192.168.1.124')
+
+
+global steering_wheel_angle;
+global vel_lineal_ackerman_kmh;
+
+%% ini_simulador_ACKERMAN
+%***********************
+
+%DECLARACIÓN DE SUBSCRIBERS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Odometria
+sub_odom=rossubscriber('/robot0/odom');
+%Laser
+%sub_laser = rossubscriber('/robot0/laser_1', rostype.sensor_msgs_LaserScan);
+%Sonars
+
+sonar_0 = rossubscriber('/robot0/sonar_0', rostype.sensor_msgs_Range);
+sonar_1 = rossubscriber('/robot0/sonar_1', rostype.sensor_msgs_Range);
+sonar_2 = rossubscriber('/robot0/sonar_2', rostype.sensor_msgs_Range);
+sonar_3 = rossubscriber('/robot0/sonar_3', rostype.sensor_msgs_Range);
+sonar_4 = rossubscriber('/robot0/sonar_4', rostype.sensor_msgs_Range);
+sonar_5 = rossubscriber('/robot0/sonar_5', rostype.sensor_msgs_Range);
+sonar_6 = rossubscriber('/robot0/sonar_6', rostype.sensor_msgs_Range);
+sonar_7 = rossubscriber('/robot0/sonar_7', rostype.sensor_msgs_Range);
+sonar_8 = rossubscriber('/robot0/sonar_8', rostype.sensor_msgs_Range);
+sonar_9 = rossubscriber('/robot0/sonar_9', rostype.sensor_msgs_Range);
+sonar_10 = rossubscriber('/robot0/sonar_10', rostype.sensor_msgs_Range);
+sonar_11 = rossubscriber('/robot0/sonar_11', rostype.sensor_msgs_Range);
+
+
+%DECLARACIÓN DE PUBLISHERS
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Velocidad
+pub_vel=rospublisher('/robot0/cmd_vel','geometry_msgs/Twist');
+
+%GENERACION DE MENSAJES
+%%%%%%%%%%%%%%%%%%%%%%%
+msg_vel=rosmessage(pub_vel);
+
+
+%Definimos la periodicidad del bucle
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+r=robotics.Rate(10);
+
+%Nos aseguramos de recibir un mensaje relacionado con el robot
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+while (strcmp(sub_odom.LatestMessage.ChildFrameId,'robot0')~=1)
+     sub_odom.LatestMessage
+end
+
+disp('Inicialización ACKERMAN finalizada correctamente');
+
+%% ***********************
+
+stop = 0;
+
+training_data=[];
+
+% Recorrido de aparcamiento para obtener datos de entrenamiento.
+sim('ackerman_ROS_controller_v2.slx')%%%%%%%%
+
+
+
+%mio
+%Conversion steering_wheel_angle, linear_vel_ackerman_kmh a V y W
+   pause(3);
+
+while (stop==0)
+  
+    s00= sonar_0.LatestMessage.Range_;
+    s01= sonar_1.LatestMessage.Range_;
+    s02= sonar_2.LatestMessage.Range_;
+    s03= sonar_3.LatestMessage.Range_;
+    s04= sonar_4.LatestMessage.Range_;
+    s05= sonar_5.LatestMessage.Range_;
+    s06= sonar_6.LatestMessage.Range_;
+    s07= sonar_7.LatestMessage.Range_;
+    s08= sonar_8.LatestMessage.Range_;
+    s09= sonar_9.LatestMessage.Range_;
+    s10= sonar_10.LatestMessage.Range_;
+    s11= sonar_11.LatestMessage.Range_;
+        
+    medidas_sonar = [s00, s01, s02, s03, s04, s05, s06, s07, s08, s09, s10, s11];
+    medidas_sonar(isinf(medidas_sonar)) = 5.0;
+
+    %Conversion steering_wheel_angle, linear_vel_ackerman_kmh a V y W
+    [vel_lineal, vel_angular] = function_conversion_steering_to_linear_angular(steering_wheel_angle, vel_lineal_ackerman_kmh);
+
+    training_data=[training_data;[medidas_sonar,vel_angular,vel_lineal, steering_wheel_angle, vel_lineal_ackerman_kmh]];
+
+        pause(0.1);
+end
+vel_lineal = 0;
+vel_angular = 0;
+
+send(pub_vel,msg_vel);
+
+save datos_entrenamiento training_data
+
+%mio
+%save datos_entrenamiento training_data
+
+inputs = training_data(:,[6,7,8,9,11,12])';
+outputs = training_data(:,[18,19])';
+inputs(isinf(inputs)) = 5.0;
+inputs = double(inputs);
+outputs = double(outputs);
+

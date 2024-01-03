@@ -5,7 +5,7 @@ rosshutdown
 clear all
 close all
 
-rosinit('192.168.1.124')
+rosinit('192.168.1.61')
 
 
 global steering_wheel_angle;
@@ -67,12 +67,12 @@ training_data=[];
 
 %AVANCE 1
 
-distancia=3.5
+%distancia=3.5
 
-vel_lineal_ackerman_kmh = -3     %(km/h)
-steering_wheel_angle =  0       % desde -90 a 90 grados.
-
-avanzar_ackerman
+%vel_lineal_ackerman_kmh = -3     %(km/h)
+%steering_wheel_angle =  20       % desde -90 a 90 grados.
+sim('ackerman_ROS_controller_v2.slx')%%%%%%%%
+%avanzar_ackerman
 
 % AVANCE 2
 

@@ -1,3 +1,4 @@
+clear all;clc
 %Apartado b
 %Tiempo de muestreo
 Ts=100e-3
