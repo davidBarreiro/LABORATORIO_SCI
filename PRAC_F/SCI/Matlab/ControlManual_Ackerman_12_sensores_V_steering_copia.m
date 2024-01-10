@@ -6,32 +6,21 @@ rosshutdown
 
 global vel_angular;
 global vel_lineal;
-
+global incAngular;
+global incLineal;
 global vel_angular_max;
 global vel_lineal_max;
 global stop
 global steering_wheel_angle;
-
+global steering_wheel_angle_max;
 global vel_lineal_ackerman_kmh;
-
-
-vel_angular=0;
-vel_lineal = 0;
-steering_wheel_angle = 0;
-vel_lineal_ackerman_kmh = 0;
-
+global vel_lineal_ackerman_kmh_max;
 
 
 %% CONFIGURACION:
 %*************************************************
 % Configurar IP del ROS_MASTER (Maquina virtual o Robot real)
-ROS_MASTER_IP = '192.168.1.61'
-
-%Configurar el incremento de velocidad lineal (km/h) y de ángulo del volante (grados)
-
-
-%% *************************************************
-
+ROS_MASTER_IP = '192.168.1.90'
 
 rosinit(ROS_MASTER_IP)
 
@@ -57,21 +46,17 @@ sonar_9 = rossubscriber('/robot0/sonar_9', rostype.sensor_msgs_Range);
 sonar_10 = rossubscriber('/robot0/sonar_10', rostype.sensor_msgs_Range);
 sonar_11 = rossubscriber('/robot0/sonar_11', rostype.sensor_msgs_Range);
 
-%GENERACION DE MENSAJES
-msg_vel=rosmessage(pub_vel);
 
-  training_data=[];
-   sim('ackerman_ROS_controller_v2.slx');
+sim('ackerman_ROS_controller_v2.slx')%%%%%%%%
 
-% Una vez que la simulación termine, cambia la variable 'stop' a 1
-%evalin('base', 'stop = 1;');
 
-    pause(0.1);
+training_data=[];
+
 stop = 0;
 
 %Pausa de 3 segundos para asegurarnos que han llegado datos del simulador
 %antes de realizar la lectura 
-x=out.parada..signals.values;;
+
 pause(3);
 
 while (stop==0)
@@ -97,9 +82,7 @@ while (stop==0)
         
     medidas_sonar = [s00, s01, s02, s03, s04, s05, s06, s07, s08, s09, s10, s11];
     medidas_sonar(isinf(medidas_sonar)) = 5.0;
-    subplot(2,1,2)
-    bar(names,medidas_sonar);
-    title ("Lectura ultrasonidos")
+
  
     %Conversion steering_wheel_angle, linear_vel_ackerman_kmh a V y W
     [vel_lineal, vel_angular] = function_conversion_steering_to_linear_angular(steering_wheel_angle, vel_lineal_ackerman_kmh);
@@ -108,22 +91,15 @@ while (stop==0)
 
     msg_vel.Linear.X = vel_lineal;
     msg_vel.Angular.Z = vel_angular;
-    send(pub_vel,msg_vel);
-    
- 
+
+    stop=ans.flag.signals.values;
+
+    pause(0.1);
 end
 
-vel_lineal = 0;
-vel_angular = 0;
-msg_vel.Linear.X = vel_lineal;
-msg_vel.Angular.Z = vel_angular;
-send(pub_vel,msg_vel);
 
 save datos_entrenamiento training_data
-inputs = training_data(:,[6,7,8,9,11,12])';
-outputs = training_data(:,[18,19])';
-inputs(isinf(inputs)) = 5.0;
-inputs = double(inputs);
-outputs = double(outputs);
+
+
 
 

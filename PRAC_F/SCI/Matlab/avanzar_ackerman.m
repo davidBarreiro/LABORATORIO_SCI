@@ -1,4 +1,5 @@
 %avanzar_ackerman
+%sim('ackerman_ROS_controller_v2.slx')%%%%%%%%
 
 [vel_lineal, vel_angular] = function_conversion_steering_to_linear_angular(steering_wheel_angle, vel_lineal_ackerman_kmh);
 

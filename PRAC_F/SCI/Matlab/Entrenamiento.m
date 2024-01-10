@@ -1,15 +1,26 @@
 %% conectar
 %***********************
 
+clear all;
+close all;
 rosshutdown
-clear all
-close all
+
 
 rosinit('192.168.1.90')
 
-global stop
+
 global steering_wheel_angle;
 global vel_lineal_ackerman_kmh;
+global s05;
+global s06;
+global s07;
+global s08;
+global s10;
+global s11;
+global x;
+global y;
+global theta;
+
 
 %% ini_simulador_ACKERMAN
 %***********************
@@ -60,60 +71,69 @@ disp('Inicialización ACKERMAN finalizada correctamente');
 
 %% ***********************
 
-stop = 0;
 
 training_data=[];
+N=2
+
+Sensores_vec=[];
+angVol_vec=[];
+velLin_vec=[];
+for i=1:N
 
 % Recorrido de aparcamiento para obtener datos de entrenamiento.
-sim('ackerman_ROS_controller_v2.slx')%%%%%%%%
 
+sim('ackerman_ROS_controller_v2.slx')
 
-
-%mio
-%Conversion steering_wheel_angle, linear_vel_ackerman_kmh a V y W
-   pause(3);
-
-while (stop==0)
-  
-    s00= sonar_0.LatestMessage.Range_;
-    s01= sonar_1.LatestMessage.Range_;
-    s02= sonar_2.LatestMessage.Range_;
-    s03= sonar_3.LatestMessage.Range_;
-    s04= sonar_4.LatestMessage.Range_;
-    s05= sonar_5.LatestMessage.Range_;
-    s06= sonar_6.LatestMessage.Range_;
-    s07= sonar_7.LatestMessage.Range_;
-    s08= sonar_8.LatestMessage.Range_;
-    s09= sonar_9.LatestMessage.Range_;
-    s10= sonar_10.LatestMessage.Range_;
-    s11= sonar_11.LatestMessage.Range_;
+    vel_lineal_ackerman_kmh =  ans.steering.signals.values;  %(km/h)
+    steering_wheel_angle =  ans.vel_lineal.signals.values; % desde -90 a 90 grados.
+      
+    s05=ans.s05.signals.values;
+    s06=ans.s06.signals.values;
+    s07=ans.s07.signals.values;
+    s08=ans.s08.signals.values;
+    s10=ans.s10.signals.values;
+    s11=ans.s11.signals.values;
+    x=ans.x.signals.values;
+    y=ans.y.signals.values;
+    theta=ans.theta.signals.values;
+    theta2 = theta(1, :);
+    theta=reshape(theta2,[],1);
         
-    medidas_sonar = [s00, s01, s02, s03, s04, s05, s06, s07, s08, s09, s10, s11];
+    medidas_sonar = [s05, s06, s07, s08, s10, s11];
     medidas_sonar(isinf(medidas_sonar)) = 5.0;
 
-    %Conversion steering_wheel_angle, linear_vel_ackerman_kmh a V y W
-    [vel_lineal, vel_angular] = function_conversion_steering_to_linear_angular(steering_wheel_angle, vel_lineal_ackerman_kmh);
+    disp('inicio pausa');
+    pause(10)
+    disp('fin pausa');
 
-    training_data=[training_data;[medidas_sonar,vel_angular,vel_lineal, steering_wheel_angle, vel_lineal_ackerman_kmh]];
+    medidas_sonar = medidas_sonar(1:271,:);
+    steering_wheel_angle = steering_wheel_angle(1:271,:);
+    vel_lineal_ackerman_kmh = vel_lineal_ackerman_kmh(1:271,:);
 
-    if(vel_lineal_ackerman_kmh == 0.0)
-      stop==1
-    end
-        %pause(0.1);
+    Sensores_vec=[Sensores_vec;medidas_sonar];
+
+    angVol_vec=[angVol_vec;steering_wheel_angle];
+    velLin_vec=[velLin_vec;vel_lineal_ackerman_kmh];
+
+    i
 end
-vel_lineal = 0;
-vel_angular = 0;
 
-send(pub_vel,msg_vel);
+    training_data=[Sensores_vec,velLin_vec,angVol_vec];
 
 save datos_entrenamiento training_data
 
-%mio
-%save datos_entrenamiento training_data
 
-inputs = training_data(:,[6,7,8,9,11,12])';
-outputs = training_data(:,[18,19])';
+inputs = training_data(:,[1:6])';
+outputs = training_data(:,[7:8])';
 inputs(isinf(inputs)) = 5.0;
 inputs = double(inputs);
 outputs = double(outputs);
 
+
+% Entrenar red neuronal con 10 neuronas en la capa oculta
+net = feedforwardnet([10]);
+net = configure(net,inputs,outputs);
+net = train(net,inputs,outputs); 
+
+% Generar bloque de Simulink con el controlador neuronal
+gensim(net)

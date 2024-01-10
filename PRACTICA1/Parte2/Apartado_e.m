@@ -5,7 +5,7 @@ Ts=100e-3
 
 %Apartado e
 % Generar N posiciones aleatorias, simular y guardar en variables
-N=30
+N=3
 E_d_vec=[];
 E_theta_vec=[];
 V_vec=[];
