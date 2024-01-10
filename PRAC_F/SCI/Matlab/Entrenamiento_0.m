@@ -82,28 +82,25 @@ for i=1:N
 
 % Recorrido de aparcamiento para obtener datos de entrenamiento.
 
-sim('ackerman_ROS_controller_v2.slx')
+sim('ackerman_ROS_controller_v2_0.slx')
 
     vel_lineal_ackerman_kmh =  ans.steering.signals.values;  %(km/h)
     steering_wheel_angle =  ans.vel_lineal.signals.values; % desde -90 a 90 grados.
      
-    s00=ans.s05.signals.values;
-    s06=ans.s06.signals.values;
-    s07=ans.s07.signals.values;
-    s08=ans.s08.signals.values;
+    s00=ans.s00.signals.values;
+    s01=ans.s01.signals.values;
+    s02=ans.s02.signals.values;
+    s03=ans.s03.signals.values;
+    s04=ans.s04.signals.values;
     s05=ans.s05.signals.values;
     s06=ans.s06.signals.values;
     s07=ans.s07.signals.values;
     s08=ans.s08.signals.values;
+    s09=ans.s09.signals.values;
     s10=ans.s10.signals.values;
     s11=ans.s11.signals.values;
-    x=ans.x.signals.values;
-    y=ans.y.signals.values;
-    theta=ans.theta.signals.values;
-    theta2 = theta(1, :);
-    theta=reshape(theta2,[],1);
         
-    medidas_sonar = [s05, s06, s07, s08, s10, s11];
+    medidas_sonar = [s00, s01, s02, s03, s04, s05, s06, s07, s08, s09, s10, s11];
     medidas_sonar(isinf(medidas_sonar)) = 5.0;
 
     disp('inicio pausa');
@@ -127,8 +124,8 @@ end
 save datos_entrenamiento training_data
 
 
-inputs = training_data(:,[1:6])';
-outputs = training_data(:,[7:8])';
+inputs = training_data(:,[1:12])';
+outputs = training_data(:,[13:14])';
 inputs(isinf(inputs)) = 5.0;
 inputs = double(inputs);
 outputs = double(outputs);
