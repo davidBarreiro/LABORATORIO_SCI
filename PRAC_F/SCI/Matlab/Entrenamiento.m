@@ -11,16 +11,18 @@ rosinit('192.168.1.90')
 
 global steering_wheel_angle;
 global vel_lineal_ackerman_kmh;
+global s00;
+global s01;
+global s02;
+global s03;
+global s04;
 global s05;
 global s06;
 global s07;
 global s08;
+global s09;
 global s10;
 global s11;
-global x;
-global y;
-global theta;
-
 
 %% ini_simulador_ACKERMAN
 %***********************
@@ -73,11 +75,13 @@ disp('Inicialización ACKERMAN finalizada correctamente');
 
 
 training_data=[];
-N=2
+
+N=4
 
 Sensores_vec=[];
 angVol_vec=[];
 velLin_vec=[];
+
 for i=1:N
 
 % Recorrido de aparcamiento para obtener datos de entrenamiento.
@@ -87,23 +91,20 @@ sim('ackerman_ROS_controller_v2.slx')
     vel_lineal_ackerman_kmh =  ans.steering.signals.values;  %(km/h)
     steering_wheel_angle =  ans.vel_lineal.signals.values; % desde -90 a 90 grados.
      
-    s00=ans.s05.signals.values;
-    s06=ans.s06.signals.values;
-    s07=ans.s07.signals.values;
-    s08=ans.s08.signals.values;
+    s00=ans.s00.signals.values;
+    s01=ans.s01.signals.values;
+    s02=ans.s02.signals.values;
+    s03=ans.s03.signals.values;
+    s04=ans.s04.signals.values;
     s05=ans.s05.signals.values;
     s06=ans.s06.signals.values;
     s07=ans.s07.signals.values;
     s08=ans.s08.signals.values;
+    s09=ans.s09.signals.values;
     s10=ans.s10.signals.values;
     s11=ans.s11.signals.values;
-    x=ans.x.signals.values;
-    y=ans.y.signals.values;
-    theta=ans.theta.signals.values;
-    theta2 = theta(1, :);
-    theta=reshape(theta2,[],1);
         
-    medidas_sonar = [s05, s06, s07, s08, s10, s11];
+    medidas_sonar = [s00, s01, s02, s03, s04, s05, s06, s07, s08, s09, s10, s11];
     medidas_sonar(isinf(medidas_sonar)) = 5.0;
 
     disp('inicio pausa');
@@ -119,16 +120,17 @@ sim('ackerman_ROS_controller_v2.slx')
     angVol_vec=[angVol_vec;steering_wheel_angle];
     velLin_vec=[velLin_vec;vel_lineal_ackerman_kmh];
 
+    %s00, s01, s02, s03, s04, s05, s06, s07, s08, s09, s10, s11=0;
     i
 end
 
-    training_data=[Sensores_vec,velLin_vec,angVol_vec];
+training_data=[Sensores_vec,velLin_vec,angVol_vec];
 
 save datos_entrenamiento training_data
 
 
-inputs = training_data(:,[1:6])';
-outputs = training_data(:,[7:8])';
+inputs = training_data(:,[1:12])';
+outputs = training_data(:,[13:14])';
 inputs(isinf(inputs)) = 5.0;
 inputs = double(inputs);
 outputs = double(outputs);
