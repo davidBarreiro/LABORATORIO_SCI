@@ -23,6 +23,7 @@ global s08;
 global s09;
 global s10;
 global s11;
+global y;
 
 %% ini_simulador_ACKERMAN
 %***********************
@@ -76,14 +77,17 @@ disp('Inicialización ACKERMAN finalizada correctamente');
 
 training_data=[];
 
-N=4
+N=12
 
 Sensores_vec=[];
 angVol_vec=[];
 velLin_vec=[];
 
-for i=1:N
+for i=0:N
 
+%s08
+
+%y
 % Recorrido de aparcamiento para obtener datos de entrenamiento.
 
 sim('ackerman_ROS_controller_v2.slx')
@@ -103,7 +107,8 @@ sim('ackerman_ROS_controller_v2.slx')
     s09=ans.s09.signals.values;
     s10=ans.s10.signals.values;
     s11=ans.s11.signals.values;
-        
+    y=ans.y.signals.values;
+       
     medidas_sonar = [s00, s01, s02, s03, s04, s05, s06, s07, s08, s09, s10, s11];
     medidas_sonar(isinf(medidas_sonar)) = 5.0;
 
@@ -120,7 +125,11 @@ sim('ackerman_ROS_controller_v2.slx')
     angVol_vec=[angVol_vec;steering_wheel_angle];
     velLin_vec=[velLin_vec;vel_lineal_ackerman_kmh];
 
-    %s00, s01, s02, s03, s04, s05, s06, s07, s08, s09, s10, s11=0;
+  % rosshutdown
+
+  % rosinit('192.168.1.90')
+%s08=5;
+%y=5;
     i
 end
 
