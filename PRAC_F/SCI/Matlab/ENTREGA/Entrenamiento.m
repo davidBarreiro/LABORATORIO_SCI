@@ -75,16 +75,12 @@ training_data=[];
 
 %numero de maniobras para entreno
 N=10
-
 %Vectores para almacenar los datos de entrenamiento
 Sensores_vec=[];
 angVol_vec=[];
 velLin_vec=[];
-
 %Bucle para crear los datos de entrenamiento
 for i=0:N
-
-        i
 
 % Recorrido de aparcamiento para obtener datos de entrenamiento con 
 % controlador borroso.
