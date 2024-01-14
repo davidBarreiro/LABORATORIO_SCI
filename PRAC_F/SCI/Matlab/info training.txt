@@ -1,0 +1,13 @@
+Red Neuronal entrenada con 10 maniobras
+
+5 en el entorno original 
+
+5 en el entorno definitivo
+
+De manera alterna
+
+Y con 8 capas ocultas
+
+Informacion de performance,training state,eroor histogram,regression en nn_pic_2
+
+Informacion de Neuronal Network y Network diagram en nn_pic
